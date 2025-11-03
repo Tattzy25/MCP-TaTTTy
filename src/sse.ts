@@ -70,3 +70,49 @@ export async function runSSEServer(server: Server) {
 		);
 	});
 }
+
+// Vercel serverless function export
+export default async function handler(req: any, res: any) {
+	const server = new Server(
+		{
+			name: "stability-ai",
+			version: "0.0.1",
+		},
+		{
+			capabilities: {
+				tools: {},
+				resources: {},
+				prompts: {},
+			},
+		}
+	);
+
+	// Import and set up the server handlers here
+	// This is a simplified version for Vercel - full setup would need to be imported
+
+	if (req.method === 'GET' && req.url === '/sse') {
+		// Handle SSE connection
+		res.writeHead(200, {
+			'Content-Type': 'text/event-stream',
+			'Cache-Control': 'no-cache',
+			'Connection': 'keep-alive',
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Headers': 'Cache-Control',
+		});
+
+		// For Vercel, we need to handle this differently
+		res.end('data: {"error": "SSE not supported in serverless functions"}\n\n');
+		return;
+	}
+
+	if (req.method === 'POST' && req.url === '/messages') {
+		res.status(400).json({ error: "SSE connection required first" });
+		return;
+	}
+
+	res.status(404).json({
+		error: "Not Found",
+		message: `Route ${req.method} ${req.url} not found`,
+		timestamp: new Date().toISOString(),
+	});
+}
