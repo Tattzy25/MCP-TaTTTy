@@ -134,3 +134,4 @@ build
 src/test.ts
 
 .DS_Store
+.vercel
