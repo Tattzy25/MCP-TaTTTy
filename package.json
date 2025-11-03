@@ -1,0 +1,49 @@
+{
+  "type": "module",
+  "bin": {
+    "mcp-tattty": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "start:test": "npm run build && node build/test.js"
+  },
+  "files": [
+    "build"
+  ],
+  "dependencies": {
+    "@google-cloud/storage": "^7.17.2",
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "open": "^10.2.0",
+    "zod": "^3.24.1"
+  },
+  "name": "mcp-tattty",
+  "version": "0.3.0",
+  "description": "MCP-TaTTTy - A powerful MCP server for AI image generation and manipulation tools.",
+  "main": "index.js",
+  "keywords": [
+    "mcp",
+    "model context protocol",
+    "mcp server",
+    "ai",
+    "image generation",
+    "image manipulation",
+    "upscale",
+    "creative tools"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tattzy25/MCP-TaTTTy.git"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
