@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const SERVER_URL = 'https://mcp-tattty.vercel.app';
+const SERVER_URL = 'http://localhost:3020';
 
 async function testImageGeneration() {
   try {
