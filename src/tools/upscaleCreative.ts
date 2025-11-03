@@ -16,7 +16,7 @@ export type UpscaleCreativeArgs = z.infer<typeof UpscaleCreativeArgsSchema>;
 
 export const upscaleCreativeToolDefinition = {
 	name: "stability-ai-upscale-creative",
-	description: `Enhance image resolution up to 4K using AI with creative interpretation. This tool works best on highly degraded images and performs heavy reimagining. In general, don't use this (expensive) tool unless specifically asked to do so, usually after trying stability-ai-upscale-fast first.`,
+	description: `Enhance image resolution up to 4K using AI with creative interpretation. This tool works best on highly degraded images and performs heavy reimagining. In general, don't use this (expensive) tool unless specifically asked to do so.`,
 	inputSchema: {
 		type: "object",
 		properties: {

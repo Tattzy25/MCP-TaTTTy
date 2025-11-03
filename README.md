@@ -43,18 +43,10 @@ This server is built and tested on macOS with Claude Desktop. It should work wit
 
 | Tool Name                        | Description                                                                                        | Estimated Stability API Cost |
 | -------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------- |
-| `generate-image`                 | Generate a high quality image of anything based on a provided prompt & other optional parameters.  | $0.03                        |
 | `generate-image-sd35`            | Generate an image using Stable Diffusion 3.5 models with advanced configuration options.           | $0.04-$0.07                  |
 | `remove-background`              | Remove the background from an image.                                                               | $0.02                        |
-| `outpaint`                       | Extend an image in any direction while maintaining visual consistency.                             | $0.04                        |
-| `search-and-replace`             | Replace objects or elements in an image by describing what to replace and what to replace it with. | $0.04                        |
-| `upscale-fast`                   | Enhance image resolution by 4x.                                                                    | $0.01                        |
 | `upscale-creative`               | Enhance image resolution up to 4K.                                                                 | $0.25                        |
-| `control-sketch`                 | Translate hand-drawn sketch to production-grade image.                                             | $0.03                        |
-| `control-style`                  | Generate an image in the style of a reference image.                                               | $0.04                        |
 | `control-structure`              | Generate an image while maintaining the structure of a reference image.                            | $0.03                        |
-| `replace-background-and-relight` | Replace the background of an image and relight it.                                                 | $0.08                        |
-| `search-and-recolor`             | Search for and recolor objects in an image.                                                        | $0.05                        |
 
 # Usage Tips
 
@@ -65,12 +57,6 @@ This server is built and tested on macOS with Claude Desktop. It should work wit
 <img src="https://github.com/tadasant/mcp-tatttyai/blob/main/images/prompts.png" width="500" alt="Prompts">
 
 # Examples
-
-## Generate an image
-
-1. `Generate an image of a cat`
-2. `Generate a photorealistic image of a cat in a cyberpunk city, neon lights reflecting off its fur, 16:9 aspect ratio`
-3. `Generate a detailed digital art piece of a cat wearing a space suit floating through a colorful nebula, style preset: digital-art, aspect ratio: 21:9`
 
 ## Generate an image with SD3.5
 
@@ -84,18 +70,6 @@ This server is built and tested on macOS with Claude Desktop. It should work wit
 2. `Remove the background from product-photo.jpg to prepare it for my e-commerce site`
 3. `Remove the background from group-photo.png so I can composite it with another image`
 
-## Outpaint (Uncrop)
-
-1. `Extend vacation-photo.jpg 500 pixels to the right to include more of the beach`
-2. `Extend family-portrait.png 300 pixels up to show more of the mountains, and 200 pixels right to include more landscape`
-3. `Extend artwork.png in all directions to create a wider fantasy forest scene that matches the original environment`
-
-## Search and Replace
-
-1. `In my last image, replace the red car with a blue car`
-2. `In portrait.png, replace the plain background with a sunset over mountains`
-3. `In landscape.jpg, replace the modern buildings with victorian-era architecture while maintaining the same atmosphere`
-
 ## Upscale
 
 1. `Upscale profile-pic.jpg for better resolution`
@@ -105,26 +79,9 @@ And then, if the output still isn't good enough, you can upscale it again:
 
 1. `Try again with better quality`
 
-## Control Sketch
-
-1. `Transform sketch.png into a colored illustration for a children's book`
-2. `Convert wireframe.jpg into a detailed 3D render for a modern architectural visualization`
-
-## Control Style
-
-1. `Generate an image in the style of the reference image`
-
 ## Control Structure
 
 1. `Generate an image while maintaining the structure of the reference image`
-
-## Replace Background and Relight
-
-1. `Replace the background of the image I just generated with a sunset over mountains`
-
-## Search and Recolor
-
-1. `In my last image, make the red car be blue instead`
 
 # Setup
 

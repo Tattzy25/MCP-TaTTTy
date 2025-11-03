@@ -12,45 +12,15 @@ import {
 import { z } from "zod";
 import * as dotenv from "dotenv";
 import {
-	generateImageCore,
-	generateImageCoreArgs,
-	GenerateImageCoreArgs,
-	generateImageCoreToolDefinition,
-	generateImageUltra,
-	GenerateImageUltraArgs,
-	generateImageUltraToolDefinition,
 	generateImageSD35,
 	GenerateImageSD35Args,
 	generateImageSD35ToolDefinition,
 	removeBackground,
 	RemoveBackgroundArgs,
 	removeBackgroundToolDefinition,
-	outpaint,
-	OutpaintArgs,
-	outpaintToolDefinition,
-	searchAndReplace,
-	SearchAndReplaceArgs,
-	searchAndReplaceToolDefinition,
-	upscaleFast,
-	UpscaleFastArgs,
-	upscaleFastToolDefinition,
 	upscaleCreative,
 	UpscaleCreativeArgs,
 	upscaleCreativeToolDefinition,
-	controlSketch,
-	ControlSketchArgs,
-	controlSketchToolDefinition,
-	listResources,
-	listResourcesToolDefinition,
-	searchAndRecolor,
-	SearchAndRecolorArgs,
-	searchAndRecolorToolDefinition,
-	replaceBackgroundAndRelight,
-	ReplaceBackgroundAndRelightArgs,
-	replaceBackgroundAndRelightToolDefinition,
-	controlStyle,
-	ControlStyleArgs,
-	controlStyleToolDefinition,
 	controlStructure,
 	ControlStructureArgs,
 	controlStructureToolDefinition,
@@ -180,37 +150,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 	try {
 		switch (name) {
-			case generateImageCoreToolDefinition.name:
-				return generateImageCore(args as generateImageCoreArgs, context);
-			case generateImageCoreToolDefinition.name:
-				return generateImageCore(args as generateImageCoreArgs, context);
-			case generateImageUltraToolDefinition.name:
-				return generateImageUltra(args as GenerateImageUltraArgs, context);
 			case generateImageSD35ToolDefinition.name:
 				return generateImageSD35(args as GenerateImageSD35Args, context);
 			case removeBackgroundToolDefinition.name:
 				return removeBackground(args as RemoveBackgroundArgs, context);
-			case outpaintToolDefinition.name:
-				return outpaint(args as OutpaintArgs, context);
-			case searchAndReplaceToolDefinition.name:
-				return searchAndReplace(args as SearchAndReplaceArgs, context);
-			case upscaleFastToolDefinition.name:
-				return upscaleFast(args as UpscaleFastArgs, context);
 			case upscaleCreativeToolDefinition.name:
 				return upscaleCreative(args as UpscaleCreativeArgs, context);
-			case controlSketchToolDefinition.name:
-				return controlSketch(args as ControlSketchArgs, context);
-			case listResourcesToolDefinition.name:
-				return listResources(context);
-			case searchAndRecolorToolDefinition.name:
-				return searchAndRecolor(args as SearchAndRecolorArgs, context);
-			case replaceBackgroundAndRelightToolDefinition.name:
-				return replaceBackgroundAndRelight(
-					args as ReplaceBackgroundAndRelightArgs,
-					context
-				);
-			case controlStyleToolDefinition.name:
-				return controlStyle(args as ControlStyleArgs, context);
 			case controlStructureToolDefinition.name:
 				return controlStructure(args as ControlStructureArgs, context);
 			default:
@@ -232,20 +177,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 server.setRequestHandler(ListToolsRequestSchema, async () => {
 	return {
 		tools: [
-			generateImageCoreToolDefinition,
-			generateImageCoreToolDefinition,
-			generateImageUltraToolDefinition,
 			generateImageSD35ToolDefinition,
 			removeBackgroundToolDefinition,
-			outpaintToolDefinition,
-			searchAndReplaceToolDefinition,
-			upscaleFastToolDefinition,
 			upscaleCreativeToolDefinition,
-			controlSketchToolDefinition,
-			listResourcesToolDefinition,
-			searchAndRecolorToolDefinition,
-			replaceBackgroundAndRelightToolDefinition,
-			controlStyleToolDefinition,
 			controlStructureToolDefinition,
 		],
 	};
@@ -298,8 +232,16 @@ main().catch((error) => {
 
 // Vercel serverless function export
 export default async function handler(req: any, res: any) {
-	// For Vercel, we need to handle the MCP protocol over HTTP
-	// This is a simplified handler - full implementation would need proper MCP over HTTP
+	// Initialize resource client for Vercel (filesystem-based since GCS might not work in serverless)
+	const resourceClientConfig: ResourceClientConfig = {
+		type: "filesystem",
+		imageStorageDirectory: process.env.IMAGE_STORAGE_DIRECTORY || "/tmp/mcp-stability-ai",
+	};
+	initializeResourceClient(resourceClientConfig);
+
+	const context: ResourceContext = {
+		requestorIpAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown',
+	};
 
 	if (req.method === 'GET') {
 		res.status(200).json({
@@ -323,41 +265,40 @@ export default async function handler(req: any, res: any) {
 				case 'tools/list':
 					res.status(200).json({
 						tools: [
-							{
-								name: "stability-ai-generate-image-sd35",
-								description: "Generate an image using Stable Diffusion 3.5 models",
-								inputSchema: {
-									type: "object",
-									properties: {
-										prompt: { type: "string" },
-										outputImageFileName: { type: "string" }
-									},
-									required: ["prompt", "outputImageFileName"]
-								}
-							}
+							generateImageSD35ToolDefinition,
+							removeBackgroundToolDefinition,
+							upscaleCreativeToolDefinition,
+							controlStructureToolDefinition,
 						],
 					});
 					break;
 				case 'tools/call':
 					const { name, arguments: args } = params;
-					if (name === 'stability-ai-generate-image-sd35') {
-						// Simplified response for testing
-						res.status(200).json({
-							content: [
-								{
-									type: "text",
-									text: `Would generate image with prompt: ${args.prompt}`,
-								},
-							],
-						});
-					} else {
-						res.status(404).json({ error: "Tool not found" });
+					let result;
+					switch (name) {
+						case generateImageSD35ToolDefinition.name:
+							result = await generateImageSD35(args as GenerateImageSD35Args, context);
+							break;
+						case removeBackgroundToolDefinition.name:
+							result = await removeBackground(args as RemoveBackgroundArgs, context);
+							break;
+						case upscaleCreativeToolDefinition.name:
+							result = await upscaleCreative(args as UpscaleCreativeArgs, context);
+							break;
+						case controlStructureToolDefinition.name:
+							result = await controlStructure(args as ControlStructureArgs, context);
+							break;
+						default:
+							res.status(404).json({ error: "Tool not found" });
+							return;
 					}
+					res.status(200).json(result);
 					break;
 				default:
 					res.status(404).json({ error: "Method not supported" });
 			}
 		} catch (error) {
+			console.error('Error processing request:', error);
 			res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
 		}
 		return;

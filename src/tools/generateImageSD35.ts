@@ -40,11 +40,7 @@ const STYLE_PRESETS = [
 
 const MODELS = [
   "sd3.5-large",
-  "sd3.5-large-turbo",
-  "sd3.5-medium",
-  "sd3-large",
-  "sd3-large-turbo",
-  "sd3-medium"
+  "sd3.5-large-turbo"
 ] as const;
 
 // Zod schema

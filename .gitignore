@@ -135,3 +135,4 @@ src/test.ts
 
 .DS_Store
 .vercel
+.env*.local

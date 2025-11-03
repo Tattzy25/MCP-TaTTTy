@@ -22,7 +22,9 @@ export type ResourceClientConfig =
 
 export function initializeResourceClient(config: ResourceClientConfig) {
 	if (instance) {
-		throw new Error("ResourceClient has already been initialized");
+		// In serverless environments, we might need to reinitialize
+		// Reset the instance to allow reinitialization
+		instance = null;
 	}
 
 	if (config.type === "filesystem") {
