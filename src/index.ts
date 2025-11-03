@@ -295,3 +295,73 @@ main().catch((error) => {
 	console.error("Fatal error:", error);
 	process.exit(1);
 });
+
+// Vercel serverless function export
+export default async function handler(req: any, res: any) {
+	// For Vercel, we need to handle the MCP protocol over HTTP
+	// This is a simplified handler - full implementation would need proper MCP over HTTP
+
+	if (req.method === 'GET') {
+		res.status(200).json({
+			name: "stability-ai",
+			version: "0.0.1",
+			capabilities: {
+				tools: {},
+				resources: {},
+				prompts: {},
+			},
+		});
+		return;
+	}
+
+	if (req.method === 'POST') {
+		// Handle MCP requests
+		const { method, params } = req.body;
+
+		try {
+			switch (method) {
+				case 'tools/list':
+					res.status(200).json({
+						tools: [
+							{
+								name: "stability-ai-generate-image-sd35",
+								description: "Generate an image using Stable Diffusion 3.5 models",
+								inputSchema: {
+									type: "object",
+									properties: {
+										prompt: { type: "string" },
+										outputImageFileName: { type: "string" }
+									},
+									required: ["prompt", "outputImageFileName"]
+								}
+							}
+						],
+					});
+					break;
+				case 'tools/call':
+					const { name, arguments: args } = params;
+					if (name === 'stability-ai-generate-image-sd35') {
+						// Simplified response for testing
+						res.status(200).json({
+							content: [
+								{
+									type: "text",
+									text: `Would generate image with prompt: ${args.prompt}`,
+								},
+							],
+						});
+					} else {
+						res.status(404).json({ error: "Tool not found" });
+					}
+					break;
+				default:
+					res.status(404).json({ error: "Method not supported" });
+			}
+		} catch (error) {
+			res.status(500).json({ error: error instanceof Error ? error.message : String(error) });
+		}
+		return;
+	}
+
+	res.status(405).json({ error: "Method not allowed" });
+}
