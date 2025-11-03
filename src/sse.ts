@@ -91,17 +91,12 @@ export default async function handler(req: any, res: any) {
 	// This is a simplified version for Vercel - full setup would need to be imported
 
 	if (req.method === 'GET' && req.url === '/sse') {
-		// Handle SSE connection
-		res.writeHead(200, {
-			'Content-Type': 'text/event-stream',
-			'Cache-Control': 'no-cache',
-			'Connection': 'keep-alive',
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Headers': 'Cache-Control',
+		// SSE is not supported in serverless functions
+		res.status(501).json({
+			error: "Not Implemented",
+			message: "SSE transport is not supported in serverless environments. Use stdio transport instead.",
+			timestamp: new Date().toISOString(),
 		});
-
-		// For Vercel, we need to handle this differently
-		res.end('data: {"error": "SSE not supported in serverless functions"}\n\n');
 		return;
 	}
 
