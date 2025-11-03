@@ -1,14 +1,14 @@
 {
   "type": "module",
   "bin": {
-    "mcp-tattty": "./build/index.js"
+    "mcp-tattty": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
-    "start:test": "npm run build && node build/test.js"
+    "build": "tsc --outDir dist && node -e \"require('fs').chmodSync('dist/index.js', '755')\"",
+    "start:test": "npm run build && node dist/test.js"
   },
   "files": [
-    "build"
+    "dist"
   ],
   "dependencies": {
     "@google-cloud/storage": "^7.17.2",
@@ -16,7 +16,9 @@
     "axios": "^1.7.9",
     "body-parser": "^1.20.3",
     "dotenv": "^16.4.7",
+    "eventsource": "^4.0.0",
     "express": "^4.21.2",
+    "node-fetch": "^3.3.2",
     "open": "^10.2.0",
     "zod": "^3.24.1"
   },
